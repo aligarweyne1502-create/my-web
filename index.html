@@ -1,1 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Satoshi Collection</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a6b2f;
+  --green-dark:#0f4520;
+  --green-light:#2d9e4e;
+  --yellow:#f5c800;
+  --yellow-light:#ffe566;
+  --yellow-pale:#fffbe6;
+  --white:#ffffff;
+  --black:#0a0a0a;
+  --gray:#f4f4f0;
+  --muted:#7a7a6e;
+  --border:#d4e8d4;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--gray);color:var(--black);overflow-x:hidden}
 
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--green-dark)}
+::-webkit-scrollbar-thumb{background:var(--yellow);border-radius:3px}
+
+.topbar{background:var(--green-dark);color:var(--yellow-light);text-align:center;padding:.5rem;font-size:.75rem;letter-spacing:.12em;font-weight:500}
+
+nav{background:var(--green);position:sticky;top:0;z-index:500;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--yellow);letter-spacing:.05em;text-decoration:none;white-space:nowrap}
+.brand span{color:var(--white);font-size:.9rem;display:block;font-family:'DM Sans',sans-serif;font-weight:300;letter-spacing:.2em;margin-top:-4px}
+.nav-links{display:flex;gap:1.5rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.05em;transition:color .2s}
+.nav-links a:hover{color:var(--yellow)}
+.nav-right{display:flex;align-items:center;gap:.8rem}
+.nav-btn{background:none;border:none;cursor:pointer;color:var(--white);position:relative;padding:.4rem}
+.nav-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
+.cart-badge{position:absolute;top:0;right:0;background:var(--yellow);color:var(--green-dark);font-size:.65rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;display:none}
+.cart-badge.show{display:flex}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:.4rem}
+.hamburger span{display:block;width:22px;height:2px;background:var(--white);border-radius:2px;transition:.3s}
+
+.mobile-menu{display:none;position:fixed;inset:0;background:var(--green-dark);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:var(--yellow-light);font-size:1.5rem;font-family:'Playfair Display',serif;text-decoration:none;transition:color .2s}
+.mobile-menu a:hover{color:var(--yellow)}
+.close-menu{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:2rem;cursor:pointer}
+
+.hero{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green) 60%,var(--green-light) 100%);padding:5rem 1.5rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 110%,rgba(245,200,0,.18) 0%,transparent 65%)}
+.hero-pattern{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 50%);background-size:30px 30px}
+.hero-content{position:relative;max-width:700px;margin:0 auto}
+.hero-tag{display:inline-block;background:var(--yellow);color:var(--green-dark);font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.35rem 1rem;margin-bottom:1.5rem}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,5.5rem);color:var(--white);line-height:1;margin-bottom:1rem}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero p{color:rgba(255,255,255,.75);font-size:1rem;line-height:1.7;margin-bottom:2rem;font-weight:300}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-yellow{background:var(--yellow);color:var(--green-dark);padding:.85rem 2rem;font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;transition:transform .15s,background .2s;text-decoration:none;display:inline-block}
+.btn-yellow:hover{background:var(--yellow-light);transform:translateY(-2px)}
+.btn-outline{background:none;color:var(--white);padding:.85rem 2rem;font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:2px solid rgba(255,255,255,.4);cursor:pointer;transition:.2s;text-decoration:none;display:inline-block}
+.btn-outline:hover{border-color:var(--yellow);color:var(--yellow)}
+
+.section{max-width:1280px;margin:0 auto;padding:4rem 1.5rem}
+.section-head{text-align:center;margin-bottom:3rem}
+.section-tag{font-size:.7rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);color:var(--green-dark);line-height:1.1}
+
+.filter-bar{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem}
+.filter-btn{background:var(--white);border:2px solid var(--border);color:var(--green-dark);padding:.45rem 1.2rem;font-size:.8rem;font-weight:600;cursor:pointer;transition:.2s;border-radius:2px;font-family:'DM Sans',sans-serif}
+.filter-btn:hover,.filter-btn.active{background:var(--green);color:var(--white);border-color:var(--green)}
+
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
+.product-card{background:var(--white);border:1px solid var(--border);overflow:hidden;transition:transform .25s,box-shadow .25s;position:relative}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(26,107,47,.15)}
+.product-img{height:220px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
+.product-badge{position:absolute;top:.75rem;left:.75rem;background:var(--yellow);color:var(--green-dark);font-size:.65rem;font-weight:700;padding:.2rem .6rem;letter-spacing:.08em}
+.product-body{padding:1.2rem}
+.product-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green-dark);margin-bottom:.3rem}
+.product-colors{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem}
+.color-dot{width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,.1);cursor:pointer;transition:transform .15s}
+.color-dot:hover,.color-dot.selected{transform:scale(1.3);border-color:var(--green)}
+.product-price{font-size:1.2rem;font-weight:700;color:var(--green);margin-bottom:1rem}
+.product-price span{font-size:.8rem;color:var(--muted);font-weight:400;margin-left:.3rem}
+.add-cart-btn{width:100%;background:var(--green);color:var(--white);border:none;padding:.75rem;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;font-family:'DM Sans',sans-serif}
+.add-cart-btn:hover{background:var(--green-dark)}
+.add-cart-btn.added{background:var(--yellow);color:var(--green-dark)}
+
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:800;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;width:min(420px,100vw);height:100vh;background:var(--white);z-index:801;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-header{background:var(--green);color:var(--white);padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.cart-header h3{font-family:'Playfair Display',serif;font-size:1.3rem}
+.cart-close{background:none;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;line-height:1}
+.cart-items{flex:1;overflow-y:auto;padding:1rem}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.cart-empty .empty-icon{font-size:3rem;margin-bottom:1rem}
+.cart-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border);align-items:center}
+.cart-item-img{width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:var(--gray);flex-shrink:0}
+.cart-item-info{flex:1}
+.cart-item-name{font-weight:600;font-size:.9rem;color:var(--green-dark)}
+.cart-item-variant{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.cart-item-price{font-weight:700;color:var(--green);font-size:.95rem}
+.cart-qty{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+.qty-btn{background:var(--green);color:var(--white);border:none;width:24px;height:24px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;border-radius:2px}
+.qty-num{font-weight:700;font-size:.9rem;min-width:20px;text-align:center}
+.cart-item-remove{background:none;border:none;color:#c00;cursor:pointer;font-size:.75rem;font-weight:600}
+.cart-footer{padding:1.2rem 1.5rem;border-top:2px solid var(--border);background:var(--yellow-pale)}
+.cart-total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;color:var(--green-dark);margin-bottom:1rem}
+.checkout-btn{width:100%;background:var(--green);color:var(--white);border:none;padding:1rem;font-size:.9rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;font-family:'DM Sans',sans-serif;margin-bottom:.6rem}
+.checkout-btn:hover{background:var(--green-dark)}
+.wa-btn{width:100%;background:#25d366;color:var(--white);border:none;padding:.85rem;font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:background .2s}
+.wa-btn:hover{background:#1aae52}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);width:min(460px,100%);overflow:hidden;animation:popIn .3s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.modal-head{background:linear-gradient(135deg,var(--green),var(--green-light));padding:1.5rem;text-align:center;color:var(--white)}
+.modal-head .mpesa-logo{font-size:2rem;margin-bottom:.3rem}
+.modal-head h3{font-family:'Playfair Display',serif;font-size:1.4rem}
+.modal-head p{font-size:.8rem;opacity:.85;margin-top:.3rem}
+.modal-body{padding:1.5rem}
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;font-size:.8rem;font-weight:600;color:var(--green-dark);margin-bottom:.4rem;letter-spacing:.05em}
+.form-group input{width:100%;border:2px solid var(--border);padding:.75rem 1rem;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;color:var(--black)}
+.form-group input:focus{border-color:var(--green)}
+.modal-total{background:var(--yellow-pale);border:2px solid var(--yellow);padding:.75rem 1rem;text-align:center;margin-bottom:1.2rem}
+.modal-total span{font-size:1.4rem;font-weight:700;color:var(--green)}
+.modal-total p{font-size:.75rem;color:var(--muted)}
+.pay-btn{width:100%;background:var(--green);color:var(--white);border:none;padding:1rem;font-size:.95rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+.pay-btn:hover{background:var(--green-dark)}
+.modal-note{font-size:.75rem;color:var(--muted);text-align:center;margin-top:.75rem;line-height:1.5}
+.modal-close-btn{background:none;border:none;display:block;margin:.5rem auto 0;font-size:.8rem;color:var(--muted);cursor:pointer;text-decoration:underline}
+.mpesa-steps{display:flex;gap:.5rem;margin-bottom:1rem}
+.step{flex:1;text-align:center;background:var(--gray);padding:.6rem .3rem;font-size:.7rem;color:var(--green-dark);font-weight:600}
+.step.active{background:var(--green);color:var(--white)}
+.status-msg{background:var(--yellow-pale);border-left:4px solid var(--yellow);padding:.75rem 1rem;font-size:.85rem;color:var(--green-dark);margin-bottom:1rem;display:none}
+.status-msg.show{display:block}
+
+.dashboard-section{background:var(--green-dark);padding:4rem 1.5rem}
+.dashboard-inner{max-width:1280px;margin:0 auto}
+.dashboard-inner .section-tag{color:var(--yellow-light)}
+.dashboard-inner .section-title{color:var(--white);margin-bottom:2rem}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-bottom:2rem}
+.dash-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:1.5rem;text-align:center;transition:background .2s}
+.dash-card:hover{background:rgba(245,200,0,.1)}
+.dash-icon{font-size:2rem;margin-bottom:.75rem}
+.dash-num{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--yellow);line-height:1}
+.dash-label{font-size:.75rem;color:rgba(255,255,255,.6);letter-spacing:.12em;text-transform:uppercase;margin-top:.3rem}
+.orders-table{width:100%;border-collapse:collapse;margin-top:1.5rem}
+.orders-table th{background:rgba(245,200,0,.15);color:var(--yellow-light);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem 1rem;text-align:left}
+.orders-table td{padding:.75rem 1rem;font-size:.85rem;color:rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.07)}
+.orders-table tr:hover td{background:rgba(255,255,255,.04)}
+.status-badge{display:inline-block;padding:.2rem .6rem;font-size:.7rem;font-weight:700;letter-spacing:.05em}
+.status-badge.paid{background:#25d366;color:#fff}
+.status-badge.pending{background:var(--yellow);color:var(--green-dark)}
+.status-badge.processing{background:#3498db;color:#fff}
+
+.features-bar{background:var(--green);padding:3rem 1.5rem}
+.features-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem;text-align:center}
+.feature-item .f-icon{font-size:2rem;margin-bottom:.6rem}
+.feature-item h4{color:var(--yellow);font-size:.9rem;font-weight:700;margin-bottom:.3rem}
+.feature-item p{color:rgba(255,255,255,.7);font-size:.78rem;line-height:1.5}
+
+footer{background:var(--green-dark);color:rgba(255,255,255,.8)}
+.footer-top{max-width:1280px;margin:0 auto;padding:3.5rem 1.5rem 2rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}
+.footer-brand .brand-name{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--yellow);margin-bottom:.5rem}
+.footer-brand .brand-tag{font-size:.75rem;color:rgba(255,255,255,.5);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+.footer-brand p{font-size:.85rem;line-height:1.7;color:rgba(255,255,255,.6);margin-bottom:1.2rem}
+.social-links{display:flex;gap:.7rem}
+.social-link{width:36px;height:36px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:var(--yellow-light);text-decoration:none;font-size:.85rem;transition:background .2s;font-weight:700}
+.social-link:hover{background:var(--yellow);color:var(--green-dark)}
+.footer-col h5{color:var(--yellow);font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.2rem}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:.6rem}
+.footer-col ul li a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.85rem;transition:color .2s}
+.footer-col ul li a:hover{color:var(--yellow)}
+.footer-contact-item{display:flex;gap:.6rem;margin-bottom:.8rem;font-size:.85rem;color:rgba(255,255,255,.6)}
+.footer-contact-item .icon{font-size:1rem}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);max-width:1280px;margin:0 auto;padding:1.2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.footer-bottom p{font-size:.75rem;color:rgba(255,255,255,.4)}
+.payment-icons{display:flex;gap:.5rem;align-items:center}
+.payment-icon{background:rgba(255,255,255,.08);padding:.3rem .7rem;font-size:.7rem;color:var(--yellow-light);font-weight:700;letter-spacing:.05em}
+
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--green);color:var(--white);padding:.85rem 1.5rem;font-size:.85rem;font-weight:600;z-index:1000;opacity:0;transition:.4s;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.wa-float{position:fixed;bottom:1.8rem;right:1.8rem;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;text-decoration:none;z-index:400;box-shadow:0 4px 20px rgba(37,211,102,.4);transition:transform .2s}
+.wa-float:hover{transform:scale(1.1)}
+
+.back-top{position:fixed;bottom:1.8rem;left:1.8rem;background:var(--green);color:var(--white);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:400;opacity:0;transition:.3s;font-size:1.2rem;border:none}
+.back-top.show{opacity:1}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+  .footer-brand{grid-column:1/-1}
+}
+@media(max-width:600px){
+  .footer-top{grid-template-columns:1fr}
+  .footer-brand{grid-column:auto}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .hero{padding:4rem 1rem 3rem}
+  .orders-table{font-size:.75rem}
+  .orders-table th,.orders-table td{padding:.5rem .6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">🇰🇪 Free delivery within Nairobi And Neighbouring Counties| Pay via M-Pesa | WhatsApp: 0726273656</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="brand">Satoshi<br/><span>Collection</span></a>
+    <ul class="nav-links">
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#jeans">Jeans</a></li>
+      <li><a href="#anaya">Anaya</a></li>
+      <li><a href="#shirts">Shirts</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#footer">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-btn" onclick="openCart()" title="Cart">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <a href="https://wa.me/254726273656" target="_blank" class="nav-btn" title="WhatsApp" style="color:#25d366">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+      <div class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="close-menu" onclick="toggleMenu()">✕</button>
+  <a href="#shop" onclick="toggleMenu()">Shop</a>
+  <a href="#jeans" onclick="toggleMenu()">Jeans</a>
+  <a href="#anaya" onclick="toggleMenu()">Anaya</a>
+  <a href="#shirts" onclick="toggleMenu()">Shirts</a>
+  <a href="#dashboard" onclick="toggleMenu()">Dashboard</a>
+  <a href="https://wa.me/254726273656" target="_blank">WhatsApp Us</a>
+</div>
+
+<section class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-tag">✦ New Collection 2026 ✦</div>
+    <h1>Style That <em>Speaks</em> Volumes</h1>
+    <p>Premium jeans, abaya dresses & shirts crafted for the bold. Delivered to your door — pay easily with M-Pesa.</p>
+    <div class="hero-btns">
+      <a href="#shop" class="btn-yellow">Shop Now</a>
+      <a href="https://wa.me/254726273656?text=Hello!%20I%20want%20to%20order%20from%20Satoshi%20Collection" target="_blank" class="btn-outline">📲 WhatsApp Order</a>
+    </div>
+  </div>
+</section>
+
+<div class="features-bar">
+  <div class="features-inner">
+    <div class="feature-item"><div class="f-icon">🚚</div><h4>Fast Delivery</h4><p>Same-day delivery in Nairobi</p></div>
+    <div class="feature-item"><div class="f-icon">📱</div><h4>M-Pesa Pay</h4><p>Secure STK push to your phone</p></div>
+    <div class="feature-item"><div class="f-icon">💬</div><h4>WhatsApp Support</h4><p>Chat with us 24/7</p></div>
+    <div class="feature-item"><div class="f-icon">↩️</div><h4>Easy Returns</h4><p>7-day hassle-free returns</p></div>
+  </div>
+</div>
+
+<div id="shop">
+
+<section class="section" id="jeans">
+  <div class="section-head">
+    <div class="section-tag">👖 Category</div>
+    <h2 class="section-title">Premium Jeans</h2>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProducts('jeans','all',this)">All</button>
+    <button class="filter-btn" onclick="filterProducts('jeans','blue',this)">Blue</button>
+    <button class="filter-btn" onclick="filterProducts('jeans','red',this)">Red</button>
+    <button class="filter-btn" onclick="filterProducts('jeans','green',this)">Green</button>
+    <button class="filter-btn" onclick="filterProducts('jeans','black',this)">Black</button>
+    <button class="filter-btn" onclick="filterProducts('jeans','brown',this)">Brown</button>
+  </div>
+  <div class="products-grid" id="jeansGrid"></div>
+</section>
+
+<section class="section" id="anaya" style="background:var(--yellow-pale)">
+  <div class="section-head">
+    <div class="section-tag">👗 Category</div>
+    <h2 class="section-title">Anaya Dresses</h2>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProducts('anaya','all',this)">All</button>
+    <button class="filter-btn" onclick="filterProducts('anaya','blue',this)">Blue</button>
+    <button class="filter-btn" onclick="filterProducts('anaya','red',this)">Red</button>
+    <button class="filter-btn" onclick="filterProducts('anaya','green',this)">Green</button>
+    <button class="filter-btn" onclick="filterProducts('anaya','pink',this)">Pink</button>
+    <button class="filter-btn" onclick="filterProducts('anaya','yellow',this)">Yellow</button>
+    <button class="filter-btn" onclick="filterProducts('anaya','black',this)">Black</button>
+  </div>
+  <div class="products-grid" id="anayaGrid"></div>
+</section>
+
+<section class="section" id="shirts">
+  <div class="section-head">
+    <div class="section-tag">👔 Category</div>
+    <h2 class="section-title">Designer Shirts</h2>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProducts('shirts','all',this)">All</button>
+    <button class="filter-btn" onclick="filterProducts('shirts','blue stripes',this)">Blue Stripes</button>
+    <button class="filter-btn" onclick="filterProducts('shirts','red stripes',this)">Red Stripes</button>
+    <button class="filter-btn" onclick="filterProducts('shirts','yellow stripes',this)">Yellow Stripes</button>
+    <button class="filter-btn" onclick="filterProducts('shirts','black',this)">Black</button>
+    <button class="filter-btn" onclick="filterProducts('shirts','white',this)">White</button>
+  </div>
+  <div class="products-grid" id="shirtsGrid"></div>
+</section>
+
+</div>
+
+<section class="dashboard-section" id="dashboard">
+  <div class="dashboard-inner">
+    <div class="section-tag">📊 Admin</div>
+    <h2 class="section-title">Store Dashboard</h2>
+    <div class="dash-grid">
+      <div class="dash-card"><div class="dash-icon">💰</div><div class="dash-num" id="dRevenue">KSh 0</div><div class="dash-label">Total Revenue</div></div>
+      <div class="dash-card"><div class="dash-icon">🛍️</div><div class="dash-num" id="dOrders">0</div><div class="dash-label">Total Orders</div></div>
+      <div class="dash-card"><div class="dash-icon">✅</div><div class="dash-num" id="dPaid">0</div><div class="dash-label">Paid Orders</div></div>
+      <div class="dash-card"><div class="dash-icon">👗</div><div class="dash-num">3</div><div class="dash-label">Product Categories</div></div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="orders-table" id="ordersTable">
+        <thead><tr><th>#</th><th>Customer</th><th>Items</th><th>Amount</th><th>Phone</th><th>Status</th><th>Time</th></tr></thead>
+        <tbody id="ordersBody"><tr><td colspan="7" style="text-align:center;color:rgba(255,255,255,.4);padding:2rem">No orders yet. Place your first order!</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer id="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="brand-name">Satoshi Collection</div>
+      <div class="brand-tag">Premium Fashion · Nairobi, Kenya</div>
+      <p>Your go-to destination for premium jeans, abaya dresses, and designer shirts. Quality fashion, delivered fast, paid easily via M-Pesa.</p>
+      <div class="social-links">
+        <a href="https://wa.me/254726273656" class="social-link" target="_blank" title="WhatsApp">W</a>
+        <a href="#" class="social-link" title="Instagram">IG</a>
+        <a href="#" class="social-link" title="Facebook">FB</a>
+        <a href="#" class="social-link" title="TikTok">TK</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Shop</h5>
+      <ul>
+        <li><a href="#jeans">Jeans Collection</a></li>
+        <li><a href="#anaya">Anaya Dresses</a></li>
+        <li><a href="#shirts">Designer Shirts</a></li>
+        <li><a href="#shop">New Arrivals</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Help</h5>
+      <ul>
+        <li><a href="#">Size Guide</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns Policy</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <div class="footer-contact-item"><span class="icon">📱</span><span>0726 273 656</span></div>
+      <div class="footer-contact-item"><span class="icon">💬</span><span>WhatsApp Available 24/7</span></div>
+      <div class="footer-contact-item"><span class="icon">📍</span><span>Nairobi, Kenya</span></div>
+      <div class="footer-contact-item"><span class="icon">📧</span><span>satoshi@collection.co.ke</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Satoshi Collection. All rights reserved. Made with 💚 in Kenya</p>
+    <div class="payment-icons">
+      <span class="payment-icon">M-PESA</span>
+      <span class="payment-icon">VISA</span>
+      <span class="payment-icon">CASH</span>
+    </div>
+  </div>
+</footer>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>🛍️ Your Cart</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><div class="empty-icon">🛒</div><p>Your cart is empty</p><p style="font-size:.8rem;color:var(--muted);margin-top:.5rem">Add items to get started</p></div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total"><span>Total</span><span id="cartTotal">KSh 0</span></div>
+    <button class="checkout-btn" onclick="openMpesa()">💳 Pay with M-Pesa</button>
+    <button class="wa-btn" onclick="orderViaWhatsApp()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mpesaModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mpesa-logo">📱</div>
+      <h3>M-Pesa STK Push</h3>
+      <p>Satoshi Collection — Secure Payment</p>
+    </div>
+    <div class="modal-body">
+      <div class="mpesa-steps">
+        <div class="step active" id="step1">1. Enter</div>
+        <div class="step" id="step2">2. Confirm</div>
+        <div class="step" id="step3">3. Done</div>
+      </div>
+      <div class="status-msg" id="statusMsg"></div>
+      <div class="modal-total">
+        <p>Amount to Pay</p>
+        <span id="mpesaTotal">KSh 0</span>
+      </div>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="payerName" placeholder="e.g. Ali Abdullahi"/>
+      </div>
+      <div class="form-group">
+        <label>M-Pesa Phone Number</label>
+        <input type="tel" id="payerPhone" placeholder="e.g. 0712345678" maxlength="10"/>
+      </div>
+      <button class="pay-btn" id="payBtn" onclick="initiateSTK()">📲 Send STK Push</button>
+      <p class="modal-note">You will receive a prompt on your phone to enter your M-Pesa PIN. Merchant: SATOSHI COLLECTION | Till: 0726273656</p>
+      <button class="modal-close-btn" onclick="closeMpesa()">Cancel payment</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<a href="https://wa.me/254726273656?text=Hello!%20I%20want%20to%20order%20from%20Satoshi%20Collection" class="wa-float" target="_blank" title="Chat on WhatsApp">💬</a>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const PRODUCTS = {
+  jeans: [
+    {id:'j1',name:'Classic Blue Jeans',color:'blue',emoji:'👖',price:2500,bg:'#dbeafe'},
+    {id:'j2',name:'Bold Red Jeans',color:'red',emoji:'👖',price:2700,bg:'#fee2e2'},
+    {id:'j3',name:'Forest Green Jeans',color:'green',emoji:'👖',price:2600,bg:'#dcfce7'},
+    {id:'j4',name:'Midnight Black Jeans',color:'black',emoji:'👖',price:2800,bg:'#1a1a2e'},
+    {id:'j5',name:'Earthy Brown Jeans',color:'brown',emoji:'👖',price:2550,bg:'#fef3c7'},
+  ],
+  anaya: [
+    {id:'a1',name:'Sky Blue Anaya',color:'blue',emoji:'👗',price:3200,bg:'#dbeafe'},
+    {id:'a2',name:'Rose Red Anaya',color:'red',emoji:'👗',price:3400,bg:'#fee2e2'},
+    {id:'a3',name:'Emerald Anaya',color:'green',emoji:'👗',price:3300,bg:'#dcfce7'},
+    {id:'a4',name:'Blossom Pink Anaya',color:'pink',emoji:'👗',price:3500,bg:'#fce7f3'},
+    {id:'a5',name:'Sunshine Yellow Anaya',color:'yellow',emoji:'👗',price:3100,bg:'#fef9c3'},
+    {id:'a6',name:'Noir Black Anaya',color:'black',emoji:'👗',price:3600,bg:'#1a1a2e'},
+  ],
+  shirts: [
+    {id:'s1',name:'Blue Stripe Shirt',color:'blue stripes',emoji:'👔',price:1800,bg:'#dbeafe'},
+    {id:'s2',name:'Red Stripe Shirt',color:'red stripes',emoji:'👔',price:1900,bg:'#fee2e2'},
+    {id:'s3',name:'Yellow Stripe Shirt',color:'yellow stripes',emoji:'👔',price:1850,bg:'#fef9c3'},
+    {id:'s4',name:'Classic Black Shirt',color:'black',emoji:'👔',price:2000,bg:'#1a1a2e'},
+    {id:'s5',name:'Clean White Shirt',color:'white',emoji:'👔',price:1800,bg:'#f0fdf4'},
+  ]
+};
+
+const COLOR_MAP = {
+  blue:'#3b82f6',red:'#ef4444',green:'#22c55e',black:'#111',brown:'#92400e',
+  pink:'#ec4899',yellow:'#eab308',white:'#f3f4f6',
+  'blue stripes':'#3b82f6','red stripes':'#ef4444','yellow stripes':'#eab308'
+};
+
+let cart = [];
+let orders = JSON.parse(localStorage.getItem('satoshi_orders')||'[]');
+
+function renderProducts(category, filter='all'){
+  const grid = document.getElementById(category+'Grid');
+  const products = filter==='all'
+    ? PRODUCTS[category]
+    : PRODUCTS[category].filter(p=>p.color===filter);
+  grid.innerHTML = products.map(p=>`
+    <div class="product-card" data-color="${p.color}" data-cat="${category}">
+      <div class="product-img" style="background:${p.bg}${p.color==='black'?';color:#fff':''}">
+        <span style="font-size:4rem">${p.emoji}</span>
+        <span class="product-badge">NEW</span>
+      </div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-colors">
+          <span class="color-dot selected" style="background:${COLOR_MAP[p.color]||'#888'}" title="${p.color}"></span>
+        </div>
+        <div class="product-price">KSh ${p.price.toLocaleString()} <span>per piece</span></div>
+        <button class="add-cart-btn" id="btn-${p.id}" onclick="addToCart('${p.id}','${category}')">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterProducts(category, color, btn){
+  document.querySelectorAll(`#${category} .filter-btn`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(category, color);
+}
+
+function addToCart(id, category){
+  const product = PRODUCTS[category].find(p=>p.id===id);
+  const existing = cart.find(i=>i.id===id);
+  if(existing){ existing.qty++; }
+  else{ cart.push({...product, qty:1}); }
+  updateCart();
+  showToast(`✅ ${product.name} added to cart!`);
+  const btn = document.getElementById('btn-'+id);
+  if(btn){ btn.textContent='✓ Added!'; btn.classList.add('added'); setTimeout(()=>{btn.textContent='Add to Cart';btn.classList.remove('added')},1500); }
+}
+
+function removeFromCart(id){
+  cart = cart.filter(i=>i.id!==id);
+  updateCart();
+}
+
+function changeQty(id, delta){
+  const item = cart.find(i=>i.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0) removeFromCart(id);
+  else updateCart();
+}
+
+function updateCart(){
+  const badge = document.getElementById('cartBadge');
+  const totalQty = cart.reduce((s,i)=>s+i.qty,0);
+  badge.textContent = totalQty;
+  badge.classList.toggle('show', totalQty>0);
+  const container = document.getElementById('cartItems');
+  const footer = document.getElementById('cartFooter');
+  const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  if(cart.length===0){
+    container.innerHTML='<div class="cart-empty"><div class="empty-icon">🛒</div><p>Your cart is empty</p><p style="font-size:.8rem;color:var(--muted);margin-top:.5rem">Add items to get started</p></div>';
+    footer.style.display='none';
+  } else {
+    container.innerHTML = cart.map(item=>`
+      <div class="cart-item">
+        <div class="cart-item-img" style="background:${item.bg}${item.color==='black'?';color:#fff':''}">${item.emoji}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-variant">${item.color}</div>
+          <div class="cart-item-price">KSh ${(item.price*item.qty).toLocaleString()}</div>
+          <div class="cart-qty">
+            <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+            <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">Remove</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    footer.style.display='block';
+    document.getElementById('cartTotal').textContent='KSh '+total.toLocaleString();
+  }
+  document.getElementById('mpesaTotal').textContent='KSh '+total.toLocaleString();
+}
+
+function openCart(){ document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); }
+function closeCart(){ document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); }
+
+function openMpesa(){
+  if(cart.length===0){ showToast('⚠️ Your cart is empty!'); return; }
+  closeCart();
+  document.getElementById('mpesaModal').classList.add('open');
+  resetMpesaSteps();
+}
+function closeMpesa(){ document.getElementById('mpesaModal').classList.remove('open'); }
+function resetMpesaSteps(){
+  ['step1','step2','step3'].forEach((s,i)=>document.getElementById(s).classList.toggle('active',i===0));
+  document.getElementById('statusMsg').classList.remove('show');
+  document.getElementById('statusMsg').textContent='';
+  document.getElementById('payBtn').disabled=false;
+  document.getElementById('payBtn').textContent='📲 Send STK Push';
+}
+
+function setStep(n){
+  ['step1','step2','step3'].forEach((s,i)=>document.getElementById(s).classList.toggle('active',i<n));
+}
+
+function initiateSTK(){
+  const name = document.getElementById('payerName').value.trim();
+  const phone = document.getElementById('payerPhone').value.trim();
+  const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  if(!name){ showToast('⚠️ Please enter your name'); return; }
+  if(!phone || phone.length<10){ showToast('⚠️ Please enter a valid phone number'); return; }
+  const btn = document.getElementById('payBtn');
+  const msg = document.getElementById('statusMsg');
+  btn.disabled=true; btn.textContent='⏳ Sending STK Push...';
+  msg.textContent='📲 STK push sent to '+phone+'. Please check your phone and enter your M-Pesa PIN.';
+  msg.classList.add('show'); setStep(2);
+  setTimeout(()=>{
+    setStep(3);
+    btn.textContent='✅ Payment Sent!';
+    msg.textContent='✅ Payment of KSh '+total.toLocaleString()+' confirmed! Thank you, '+name+'. Your order is being processed.';
+    const order = {
+      id:'ORD'+(Date.now()),
+      customer: name,
+      phone: phone,
+      items: cart.map(i=>i.name+'(x'+i.qty+')').join(', '),
+      amount: total,
+      status:'paid',
+      time: new Date().toLocaleTimeString()
+    };
+    orders.unshift(order);
+    localStorage.setItem('satoshi_orders', JSON.stringify(orders));
+    updateDashboard();
+    setTimeout(()=>{
+      cart=[];
+      updateCart();
+      closeMpesa();
+      showToast('🎉 Order placed! Thank you '+name+'!');
+      const waMsg = `Hello! I just paid KSh ${total.toLocaleString()} via M-Pesa for my order from Satoshi Collection. Name: ${name}, Phone: ${phone}. Items: ${order.items}`;
+      window.open('https://wa.me/254726273656?text='+encodeURIComponent(waMsg),'_blank');
+    },2000);
+  },3000);
+}
+
+function orderViaWhatsApp(){
+  if(cart.length===0){ showToast('⚠️ Cart is empty!'); return; }
+  const total = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  const items = cart.map(i=>`• ${i.name} x${i.qty} — KSh ${(i.price*i.qty).toLocaleString()}`).join('\n');
+  const msg = `Hello Satoshi Collection! 👋\n\nI'd like to order:\n\n${items}\n\n*Total: KSh ${total.toLocaleString()}*\n\nPlease confirm my order. Thank you!`;
+  window.open('https://wa.me/254726273656?text='+encodeURIComponent(msg),'_blank');
+}
+
+function updateDashboard(){
+  const total = orders.reduce((s,o)=>s+o.amount,0);
+  const paid = orders.filter(o=>o.status==='paid').length;
+  document.getElementById('dRevenue').textContent='KSh '+total.toLocaleString();
+  document.getElementById('dOrders').textContent=orders.length;
+  document.getElementById('dPaid').textContent=paid;
+  const tbody = document.getElementById('ordersBody');
+  if(orders.length===0){
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:rgba(255,255,255,.4);padding:2rem">No orders yet. Place your first order!</td></tr>';
+    return;
+  }
+  tbody.innerHTML = orders.map((o,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${o.customer}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.items}</td>
+      <td>KSh ${o.amount.toLocaleString()}</td>
+      <td>${o.phone}</td>
+      <td><span class="status-badge ${o.status}">${o.status}</span></td>
+      <td>${o.time}</td>
+    </tr>
+  `).join('');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('backTop').classList.toggle('show',scrollY>400);
+});
+
+renderProducts('jeans');
+renderProducts('anaya');
+renderProducts('shirts');
+updateCart();
+updateDashboard();
+</script>
+</body>
+</html>
